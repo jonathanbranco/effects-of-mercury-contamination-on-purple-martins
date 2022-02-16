@@ -7,7 +7,7 @@ library(lme4)
 library(gamlss)
 library(reshape2)
 
-#Datasets a
+#Datasets
 florida <- read.table("Florida.csv", sep=",", header = T)
 states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
 
@@ -19,7 +19,7 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
   ggplot(data=states, aes(x=Hg))+
     geom_histogram(fill="#222222", size=1, bins=20)+
     theme_bw()+
-    xlab("Concentration of THg (?g/g)")+
+    xlab("Concentration of THg (ug/g)")+
     ylab("Number of Samples")
 
   ggplot(data=florida, aes(x=Cort))+
@@ -47,7 +47,7 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       geom_boxplot(size = 1)+
       theme_bw()+
       xlab("Breeding Location")+
-      ylab("Concentration of THg (?g/g)")+
+      ylab("Concentration of THg (ug/g)")+
       scale_y_continuous(limits = c(1, 9), breaks = seq(1, 9, by = 2))
     
   #Cort
@@ -100,7 +100,7 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       geom_point(size=1)+
       geom_line(aes(y=predict(mass.hg, type="response")), size=1, color="black")+
       theme_bw()+
-      xlab("Concentration of THg (ln ?g/g)")+
+      xlab("Concentration of THg (ln ug/g)")+
       ylab("Mass (g)")
 
   
