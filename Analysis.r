@@ -49,7 +49,9 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
                       "Null"=Hg_null)
       
       aictab_hg <- aictab(cand.set = cand_Hg) #Null model selected
-      write.csv(aictab_hg, "aictabs/aictab_hg.csv")
+      
+      #Saves aictab
+      write.csv(aictab_hg, "aictabs/aictab_hg.csv", row.names=F)
       
       #Plot of non-selected model using breeding location ("State" variable) as predictor. 
       ##Plot intended for visualization of non-correlation only. 
@@ -79,11 +81,9 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
                         "Null" = cort_null)
       
       aictab_cort <- aictab(cand.set = cand_cort) #Model using breeding location as sole predictor selected
-      write.csv(aictab_cort, "aictabs/aictab_cort.csv")
       
-      #Summary of selected model
-      summary(cort.state)
-      states %>% group_by(State) %>% summarise(mean=mean(Cort))
+      #Saves aictab
+      write.csv(aictab_cort, "aictabs/aictab_cort.csv", row.names=F)
       
       #Plot of selected model. Log10() function used to facilitate visualization
       ggplot(data=states, aes(y=log10(Cort), x=State))+
@@ -119,8 +119,9 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
                         "Sex"=mass_sex)
       
       aictab_mass <- aictab(cand.set = cand_mass) #Model using log(Hg) as sole predictor selected
-      write.csv(aictab_mass, "aictabs/aictab_mass.csv")
       
+      #Saves aictab
+      write.csv(aictab_mass, "aictabs/aictab_mass.csv", row.names=F)
       
       #Plot of selected model. Log() function used to facilitate visualization
       ggplot(data=florida, aes(y=Mass, x=log(Hg)))+
@@ -156,10 +157,9 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
                    "Hg + Sex + Age"=fat_all)
       
       aictab_fat_score <- aictab(cand.set = cand)
-      write.csv(aictab_fat_score, "aictabs/aictab_fat_score.csv")
       
-      #Summary of selected model
-      summary(fat_all)
+      #Saves aictab
+      write.csv(aictab_fat_score, "aictabs/aictab_fat_score.csv", row.names=F)
       
       #Creation of data.frame from selected model for visualization. 
       ##Code adapted from https://stats.oarc.ucla.edu/r/dae/ordinal-logistic-regression/
@@ -185,4 +185,5 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       
       #Saves mass plot
       ggsave("graphs/fat_score_plot.png", plot=fat_score_plot, width = 6, height=9, dpi="print")
+      
       
