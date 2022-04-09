@@ -127,17 +127,17 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       fat_hg_sex<-polr(Fat.Score~Sex+Hg, data=florida, Hess = TRUE) #Removed from article to decrease table size. Not selected by aictab
       fat_sex_age<-polr(Fat.Score~Sex+Age, data=florida, Hess = TRUE) #Removed from article to decrease table size. Not selected by aictab
           
-      cand <- list("Null"=fat_null,
-                   "Hg"=fat_hg,
-                   "Age"=fat_age,
-                   "Sex"=fat_sex,
-                   "Hg + Age"=fat_hg_age,
-                   "Hg + Sex"=fat_hg_sex,
-                   "Sex + Age"=fat_sex_age,
-                   "Hg + Sex + Age"=fat_all)
+      cand_fat_score <- list("Null"=fat_null,
+                             "Hg"=fat_hg,
+                             "Age"=fat_age,
+                             "Sex"=fat_sex,
+                             "Hg + Age"=fat_hg_age,
+                             "Hg + Sex"=fat_hg_sex,
+                             "Sex + Age"=fat_sex_age,
+                             "Hg + Sex + Age"=fat_all)
       
-      aictab_fat_score <- aictab(cand.set = cand)
-      
+      aictab_fat_score <- aictab(cand.set = cand_fat_score)
+
       #Creation of data.frame from selected model for visualization. 
       ##Code adapted from https://stats.oarc.ucla.edu/r/dae/ordinal-logistic-regression/
       newdat <- data.frame(Age = rep(1:7, len=630),
@@ -161,12 +161,16 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
         theme_bw() -> fat_score_plot
       
   #Exporting results ----
-    
-    #Renames Modnames column to Predictor and exports aictabs
+    #Prepares and exports aictabs
     for(tab in c("aictab_hg","aictab_cort","aictab_mass","aictab_fat_score")){
       assign(tab,
-             rename(as_tibble(get(tab)), Predictor = Modnames)) #Renames Modnames column
-      write.csv(get(tab), paste("aictabs/",tab,".csv",sep=""), row.names=F) #Exports tab
+             as_tibble(get(tab))) #Turns aictabs into tibbles to facilitate changes
+      assign(tab,
+             cbind(get(tab)[1:2], #Gets columns 1 and 2 as normal
+                   round(as_tibble(get(tab))[3:8],2))) #Rounds columns 3 to 8 up to 2 decimal points
+      assign(tab,
+             rename(get(tab), 'Model predictor' = Modnames)) #Renames Modnames column
+      write.csv(get(tab), paste("aictabs/",tab,".csv",sep=""), row.names=F) #Exports aictabs
     }
       
     #Exports plots
@@ -174,4 +178,5 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
     ggsave("graphs/boxplots.png", plot=boxplots, width = 6, height=8, dpi="print")
     ggsave("graphs/mass_plot.png", plot=mass_plot, width = 6, height=5, dpi="print")
     ggsave("graphs/fat_score_plot.png", plot=fat_score_plot, width = 6, height=9, dpi="print")
+    
     
