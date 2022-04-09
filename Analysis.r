@@ -179,4 +179,3 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
   ggsave("graphs/mass_plot.png", plot=mass_plot, width = 6, height=5, dpi="print")
   ggsave("graphs/fat_score_plot.png", plot=fat_score_plot, width = 6, height=9, dpi="print")
     
-    
