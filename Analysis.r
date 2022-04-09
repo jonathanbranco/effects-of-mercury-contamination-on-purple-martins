@@ -29,12 +29,9 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
     xlab("Concentration of Corticosterone (pg/mg)")+
     ylab("Number of Samples") -> cort_hist
   
-  #Joins histogram plot
-  hist_plot <- grid.arrange(hg_hist, cort_hist, ncol=1)
-  
-  #Saves histogram plot
-  ggsave("graphs/hist_plot.png", plot=hist_plot, width = 6, height=8, dpi="print")
-
+    #Joins histogram plot
+    hist_plot <- grid.arrange(hg_hist, cort_hist, ncol=1)
+    
   #Statistical Models ----
     #Hg ----
       #Model selection
@@ -50,19 +47,14 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       
       aictab_hg <- aictab(cand.set = cand_Hg) #Null model selected
       
-      #Saves aictab
-      write.csv(aictab_hg, "aictabs/aictab_hg.csv", row.names=F)
-      
       #Plot of non-selected model using breeding location ("State" variable) as predictor. 
-      ##Plot intended for visualization of non-correlation only. 
+      #Plot intended for visualization of non-correlation only. 
       ggplot(data=states, aes(x=State, y=Hg))+
         geom_boxplot(size = 1)+
         theme_bw()+
         xlab("Breeding Location")+
         ylab("Concentration of THg (ug/g)")+
         scale_y_continuous(limits = c(1, 9), breaks = seq(1, 9, by = 2)) -> hg_plot
-      
-      #Plot will be saved later
       
     #Cort ----
       #Model selection
@@ -82,9 +74,6 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       
       aictab_cort <- aictab(cand.set = cand_cort) #Model using breeding location as sole predictor selected
       
-      #Saves aictab
-      write.csv(aictab_cort, "aictabs/aictab_cort.csv", row.names=F)
-      
       #Plot of selected model. Log10() function used to facilitate visualization
       ggplot(data=states, aes(y=log10(Cort), x=State))+
         geom_boxplot(fill="white", size=1)+
@@ -92,11 +81,8 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
         xlab("Breeding Location")+
         ylab("Concentration of Corticosterone (log10 pg/mg)") -> cort_plot
       
-      #Joins Cort and Hg boxplot
-      boxplots <- grid.arrange(hg_plot, cort_plot, ncol=1)
-      
-      #Saves boxplots
-      ggsave("graphs/boxplots.png", plot=boxplots, width = 6, height=8, dpi="print")
+        #Joins Cort and Hg boxplot
+        boxplots <- grid.arrange(hg_plot, cort_plot, ncol=1)
       
     #Mass ----
       #Model selection
@@ -120,20 +106,14 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       
       aictab_mass <- aictab(cand.set = cand_mass) #Model using log(Hg) as sole predictor selected
       
-      #Saves aictab
-      write.csv(aictab_mass, "aictabs/aictab_mass.csv", row.names=F)
-      
-      #Plot of selected model. Log() function used to facilitate visualization
-      ggplot(data=florida, aes(y=Mass, x=log(Hg)))+
+      #Plot of selected model. Log10() function used to facilitate visualization
+      ggplot(data=florida, aes(y=Mass, x=log10(Hg)))+
         geom_point(size=1)+
-        geom_line(aes(y=predict(mass.hg, type="response")), size=1, color="black")+
+        geom_line(aes(y=predict(mass_hg, type="response")), size=1, color="black")+
         theme_bw()+
         xlab("Concentration of THg (log10 ug/g)")+
         ylab("Mass (g)") -> mass_plot
   
-      #Saves mass plot
-      ggsave("graphs/mass_plot.png", plot=mass_plot, width = 6, height=5, dpi="print")
-        
     #Fat Score ----
       #Model selection
       florida$Fat.Score<-factor(florida$Fat.Score, levels=c(4,3,2,1)) #polr requires response to be a factor variable
@@ -158,9 +138,6 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       
       aictab_fat_score <- aictab(cand.set = cand)
       
-      #Saves aictab
-      write.csv(aictab_fat_score, "aictabs/aictab_fat_score.csv", row.names=F)
-      
       #Creation of data.frame from selected model for visualization. 
       ##Code adapted from https://stats.oarc.ucla.edu/r/dae/ordinal-logistic-regression/
       newdat <- data.frame(Age = rep(1:7, len=630),
@@ -183,7 +160,18 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
         scale_fill_manual(values=c("#55aaff","#6fca6f","#ffb86c","#ff5555"))+
         theme_bw() -> fat_score_plot
       
-      #Saves mass plot
-      ggsave("graphs/fat_score_plot.png", plot=fat_score_plot, width = 6, height=9, dpi="print")
+  #Exporting results ----
+    
+    #Renames Modnames column to Predictor and exports aictabs
+    for(tab in c("aictab_hg","aictab_cort","aictab_mass","aictab_fat_score")){
+      assign(tab,
+             rename(as_tibble(get(tab)), Predictor = Modnames)) #Renames Modnames column
+      write.csv(get(tab), paste("aictabs/",tab,".csv",sep=""), row.names=F) #Exports tab
+    }
       
-      
+    #Exports plots
+    ggsave("graphs/hist_plot.png", plot=hist_plot, width = 6, height=8, dpi="print")
+    ggsave("graphs/boxplots.png", plot=boxplots, width = 6, height=8, dpi="print")
+    ggsave("graphs/mass_plot.png", plot=mass_plot, width = 6, height=5, dpi="print")
+    ggsave("graphs/fat_score_plot.png", plot=fat_score_plot, width = 6, height=9, dpi="print")
+    
