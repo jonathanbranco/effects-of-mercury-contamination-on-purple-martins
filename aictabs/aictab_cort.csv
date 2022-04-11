@@ -1,0 +1,7 @@
+"Model predictor","K","AICc","Delta_AICc","ModelLik","AICcWt","LL","Cum.Wt"
+"Breeding Location",4,652.96,0,1,0.57,-322.21,0.57
+"Breeding Location + THg + Sex",6,654.76,1.8,0.41,0.23,-320.8,0.81
+"Breeding Location + THg",5,655.16,2.2,0.33,0.19,-322.17,1
+"THg",3,663.96,11,0,0,-328.82,1
+"Null",2,664.9,11.94,0,0,-330.37,1
+"Sex",3,667.04,14.08,0,0,-330.36,1
