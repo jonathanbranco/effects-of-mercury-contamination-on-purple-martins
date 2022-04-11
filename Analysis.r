@@ -66,10 +66,10 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       cort_sex <- lm(Cort~Sex, data=states)
       
       cand_cort <- list("Breeding Location" = cort_state,
-                        "Hg" = cort_hg,
+                        "THg" = cort_hg,
                         "Sex" = cort_sex,
-                        "Breeding Location + Hg" = cort_state_sex,
-                        "Breeding Location + Hg + Sex" = cort_all,
+                        "Breeding Location + THg" = cort_state_sex,
+                        "Breeding Location + THg + Sex" = cort_all,
                         "Null" = cort_null)
       
       aictab_cort <- aictab(cand.set = cand_cort) #Model using breeding location as sole predictor selected
@@ -90,21 +90,21 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       mass_all <- lm(Mass~log10(Hg)+Age+Sex, data=florida) 
       mass_hg_age <- lm(Mass~log10(Hg)+Age, data=florida) 
       mass_hg_sex <- lm(Mass~log10(Hg)+Sex, data=florida)
-      mass_hg <- lm(Mass~log10(Hg), data=florida) #Selected model. Log10(Hg) used to facilitate visualization
+      mass_hg <- lm(Mass~log10(Hg), data=florida) #Selected model. Log10(THg) used to facilitate visualization
       mass_age_sex <- lm(Mass~Age+Sex, data=florida)
       mass_age <- lm(Mass~Age, data=florida)
       mass_sex <- lm(Mass~Sex, data=florida)
       
       cand_mass <- list("Null"=mass_null,
-                        "log10(Hg) + Age + Sex"=mass_all,
-                        "log10(Hg) + Age"=mass_hg_age,
-                        "log10(Hg) + Sex"=mass_hg_sex,
-                        "log10(Hg)"=mass_hg,
+                        "log10(THg) + Age + Sex"=mass_all,
+                        "log10(THg) + Age"=mass_hg_age,
+                        "log10(THg) + Sex"=mass_hg_sex,
+                        "log10(THg)"=mass_hg,
                         "Age + Sex"=mass_age_sex,
                         "Age"=mass_age,
                         "Sex"=mass_sex)
       
-      aictab_mass <- aictab(cand.set = cand_mass) #Model using log(Hg) as sole predictor selected
+      aictab_mass <- aictab(cand.set = cand_mass) #Model using log10(THg) as sole predictor selected
       
       #Plot of selected model. Log10() function used to facilitate visualization
       ggplot(data=florida, aes(y=Mass, x=log10(Hg)))+
@@ -128,13 +128,13 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
       fat_sex_age<-polr(Fat.Score~Sex+Age, data=florida, Hess = TRUE) #Removed from article to decrease table size. Not selected by aictab
           
       cand_fat_score <- list("Null"=fat_null,
-                             "Hg"=fat_hg,
+                             "THg"=fat_hg,
                              "Age"=fat_age,
                              "Sex"=fat_sex,
-                             "Hg + Age"=fat_hg_age,
-                             "Hg + Sex"=fat_hg_sex,
+                             "THg + Age"=fat_hg_age,
+                             "THg + Sex"=fat_hg_sex,
                              "Sex + Age"=fat_sex_age,
-                             "Hg + Sex + Age"=fat_all)
+                             "THg + Sex + Age"=fat_all)
       
       aictab_fat_score <- aictab(cand.set = cand_fat_score)
 
