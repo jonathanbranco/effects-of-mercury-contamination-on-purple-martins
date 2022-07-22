@@ -23,7 +23,7 @@ states <- read.table("FloridaWisconsinVirginia.csv", sep=",", header = T)
     xlab("Concentration of THg (ug/g)")+
     ylab("Number of Samples") -> hg_hist
 
-  ggplot(data=florida, aes(x=Cort))+
+  ggplot(data=states, aes(x=Cort))+
     geom_histogram(fill="#222222", size=1, bins=20)+
     theme_bw()+
     xlab("Concentration of Corticosterone (pg/mg)")+
